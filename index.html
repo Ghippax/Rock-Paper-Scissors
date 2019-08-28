@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rock-Paper-Scissors</title>
+    </head>
+    <body>
+        <script>
+            let playerScore = 0;
+            let computerScore = 0;
+            function computerPlay(){
+                let selection;
+                let rnd = Math.random();
+                if(rnd < 0.3){
+                    selection = "rock";
+                }else if(rnd < 0.6){
+                    selection = "paper";
+                }else{
+                    selection = "scissors";
+                }
+                return selection;
+            }
+            function getWinner(playerSelection,computerSelection){
+                if(playerSelection == computerSelection){
+                    return "Draw! Both players played " + computerSelection;
+                }
+
+                if(playerSelection == "paper" && computerSelection == "rock"){
+                    playerScore++;
+                    return "Player wins! Paper beats rock";      
+                }else if(playerSelection == "paper"){
+                    computerScore++;
+                    return "Computer wins! Scissors beats paper";   
+                }
+
+                if(playerSelection == "rock" && computerSelection == "scissors"){
+                    playerScore++;
+                    return "Player wins! Rock beats scissors";                   
+                }else if(playerSelection == "rock"){
+                    computerScore++;
+                    return "Computer wins! Paper beats rock";                   
+                }
+
+                if(playerSelection == "scissors" && computerSelection == "paper"){
+                    playerScore++;
+                    return "Player wins! Scissors beats paper";                  
+                }else if(playerSelection == "scissors"){
+                    computerScore++;
+                    return "Computer wins! Rock beats scissors";
+                }
+                alert("Introduce a valid command");
+            }
+
+            function playRound(){
+                let playerSelection = prompt("Insert rock, paper or scissors").toLowerCase();
+                let computerSelection = computerPlay();
+                console.log(getWinner(playerSelection,computerSelection));
+            }
+
+            function game(){
+                for(let i = 0; i < 5; i++){
+                    let round = i + 1;
+                    console.log("%cROUND " + round, "color:white; font-size: 16px;");
+                    playRound();
+                    console.log("Player Score: " + playerScore + 
+                    " | Computer Score: " + computerScore);
+                }
+                console.log("%cRESULTS", "color:white; font-size: 18px");
+                if(playerScore > computerScore){
+                    console.log("Player wins the game!");
+                }else if(computerScore > playerScore){
+                    console.log("Computer wins the game!")
+                }else{
+                    console.log("Draw!");
+                }
+            }
+       </script>
+    </body>
+</html>
