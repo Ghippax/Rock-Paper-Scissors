@@ -2,77 +2,150 @@
 <html>
     <head>
         <title>Rock-Paper-Scissors</title>
+        <link href="https://fonts.googleapis.com/css?family=Fredoka+One|Manjari&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="reset.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <h1>ROCK PAPER SCISSORS</h1>
+
+        <div class="play">
+            <button>Play!</button>
+        </div>
+
+        <div class="round">
+        </div>
+
+        <div class="selector">
+        </div>
+
+        <div class="roundPlay">
+        </div>
+
+        <div class="score">
+        </div>
+
+        <div class="finalResult">
+        </div>
+        
         <script>
             let playerScore = 0;
             let computerScore = 0;
+            let round = 1;
+            let playerSelection;
+
+
+            const roundNumDiv = document.querySelector(".round");
+            const scoreDiv = document.querySelector(".score");
+            const roundDiv = document.querySelector(".roundPlay");
+            const selectorDiv = document.querySelector(".selector");  
+            const playDiv = document.querySelector(".play");
+            const finalResultDiv = document.querySelector(".finalResult");
+            const playBtn = document.querySelector(".play button");
+
+            const roundPara = document.createElement("p");
+            const scorePara = document.createElement("p");
+            const roundBtn = document.createElement("button");
+            const resultsPara = document.createElement("p");
+            const finalResultPara = document.createElement("p");
+            const rockBtn = document.createElement("button");
+            const paperBtn = document.createElement("button");
+            const scissorsBtn = document.createElement("button");
+            const playerBtns = [rockBtn, paperBtn, scissorsBtn];
+
+            roundBtn.textContent = "Play Round!";
+            rockBtn.id = "rock";
+            paperBtn.id = "paper";
+            scissorsBtn.id = "scissors";
+                            
+
             function computerPlay(){
-                let selection;
-                let rnd = Math.random();
-                if(rnd < 0.3){
-                    selection = "rock";
-                }else if(rnd < 0.6){
-                    selection = "paper";
-                }else{
-                    selection = "scissors";
+                switch(Math.floor(Math.random()*3)){
+                    case 1: return "rock";
+                    case 2: return "paper";
+                    case 3: return "scissors";
                 }
-                return selection;
             }
+
             function getWinner(playerSelection,computerSelection){
-                if(playerSelection == computerSelection){
+                if(playerSelection === computerSelection){
                     return "Draw! Both players played " + computerSelection;
+                }else if(playerSelection === "rock"){
+                    return computerSelection === "scissors" ? "Player wins! Rock beats scissors" : "Computer wins! Paper beats rock"; 
+                }else if(playerSelection === "paper"){
+                    return computerSelection === "rock" ? "Player wins! Paper beats rock" : "Computer wins! Scissors beats paper"; 
+                }else if(playerSelection === "scissors"){
+                    return computerSelection === "paper" ? "Player wins! Scissors beats paper" : "Computer wins! Rock beats scissors"; 
                 }
 
-                if(playerSelection == "paper" && computerSelection == "rock"){
-                    playerScore++;
-                    return "Player wins! Paper beats rock";      
-                }else if(playerSelection == "paper"){
-                    computerScore++;
-                    return "Computer wins! Scissors beats paper";   
-                }
-
-                if(playerSelection == "rock" && computerSelection == "scissors"){
-                    playerScore++;
-                    return "Player wins! Rock beats scissors";                   
-                }else if(playerSelection == "rock"){
-                    computerScore++;
-                    return "Computer wins! Paper beats rock";                   
-                }
-
-                if(playerSelection == "scissors" && computerSelection == "paper"){
-                    playerScore++;
-                    return "Player wins! Scissors beats paper";                  
-                }else if(playerSelection == "scissors"){
-                    computerScore++;
-                    return "Computer wins! Rock beats scissors";
-                }
-                alert("Introduce a valid command");
             }
-
+            
             function playRound(){
-                let playerSelection = prompt("Insert rock, paper or scissors").toLowerCase();
                 let computerSelection = computerPlay();
-                console.log(getWinner(playerSelection,computerSelection));
+                resultsPara.textContent = getWinner(playerSelection,computerSelection);
+                if(resultsPara.textContent.charAt(0) === "P"){
+                    playerScore++;
+                }else{
+                    computerScore++;
+                }
+                roundDiv.removeChild(roundBtn);
+                round++;
+                playerBtns.forEach((btn)=>{
+                    btn.classList.remove("pressed");
+                });
+                game();
             }
 
-            function game(){
-                for(let i = 0; i < 5; i++){
-                    let round = i + 1;
-                    console.log("%cROUND " + round, "color:white; font-size: 16px;");
-                    playRound();
-                    console.log("Player Score: " + playerScore + 
-                    " | Computer Score: " + computerScore);
+            playerBtns.forEach((button) => {
+                button.addEventListener("click",() => {
+                    playerBtns.forEach((btn)=>{
+                        btn.classList.remove("pressed");
+                    });
+                    playerSelection = button.id;
+                    roundDiv.appendChild(roundBtn);
+                    button.classList.add("pressed");
+                    resultsPara.textContent = ""; 
+                });
+            }); 
+
+            function game(){  
+                roundDiv.appendChild(resultsPara);
+                roundNumDiv.appendChild(roundPara);
+                scoreDiv.appendChild(scorePara);
+                playerBtns.forEach((button) => {
+                    selectorDiv.appendChild(button);
+                });       
+                if(round > 5){
+                    endgame();
                 }
-                console.log("%cRESULTS", "color:white; font-size: 18px");
-                if(playerScore > computerScore){
-                    console.log("Player wins the game!");
-                }else if(computerScore > playerScore){
-                    console.log("Computer wins the game!")
+
+                roundBtn.addEventListener("click", playRound);
+                scorePara.textContent = "Player Score: " + playerScore + 
+                " | Computer Score: " + computerScore;
+                roundPara.textContent = "Round " + round; 
+   
+            }
+
+            function endgame(){
+                roundNumDiv.removeChild(roundPara);
+                playerBtns.forEach((button) => {
+                    selectorDiv.removeChild(button);
+                });
+                finalResultDiv.appendChild(finalResultPara);
+                if(playerScore === computerScore){
+                    finalResultPara.textContent = "Draw! Not bad...";
+                }else if(playerScore > computerScore){
+                    finalResultPara.textContent = "You Won! Good job";
                 }else{
-                    console.log("Draw!");
+                    finalResultPara.textContent = "You Lose... Better luck next time";
                 }
             }
+
+            playBtn.addEventListener("click", () => {
+                game();
+                playDiv.removeChild(playBtn);
+            });
+
        </script>
     </body>
 </html>
